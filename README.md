@@ -1,4 +1,4 @@
 # StrukturePodataka
 Repository for learning SP
 
-test1223
+I changed the readme file
