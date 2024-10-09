@@ -6,13 +6,13 @@
 int OpenFile(char* FileName);
 int NumberOfRows(const char*);
 
-int main(
+int main(){
 	int numOfRows = 0;
 
-	numOfRows = NumberOfRows("imedat.txt");
+	numOfRows = NumberOfRows("datoteka.txt");
 
 	return 0;
-)
+}
 
 int NumberOfRows(const char* fileName) {
 	FILE* fp = NULL;
