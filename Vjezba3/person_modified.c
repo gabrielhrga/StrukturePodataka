@@ -1,5 +1,3 @@
-//NEDOVRSENO S LABOVA
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,6 +14,7 @@ typedef struct Person {
 	Position next;
 }Person;
 
+//VJEZBA2 FUNCTIONS
 int Display(Position p);
 int InsertStart(Position p, const char* Name, const char* LastName, int Year);
 int InsertEnd(Position p, const char* Name, const char* LastName, int Year);
@@ -38,12 +37,19 @@ int main() {
 		return -1;
 	}
 
-	InsertEnd(head, "Ana", "Anic", 2000);
-	InsertAfter(head, "Anic", "Pero", "Peric", 1998);
+	/*
+	InsertEnd(head, "Ivica", "Lazaneo", 1998);
+	InsertAfter(head, "Lazaneo", "Pero", "Peric", 1995);
 	InsertBefore(head, "Peric", "Marko", "Maric", 1900);
-	Display(head->next);
+	*/
 
-	PrintInFile(head->next, "imedat.txt");
+	//radi
+	//PrintInFile(head->next, "imedat.txt");
+
+	//radi
+	ScanFromFile(head, "imedat.txt");
+	Sort(head);
+	Display(head->next);
 
 	free(head);
 	return 0;
@@ -128,7 +134,6 @@ int Erase(Position p, const char* LastName) {
 	return 0;
 }
 
-//VJEZBA3 FUNCTIONS
 int InsertAfter(Position p, const char* AfterName, const char* Name, const char* LastName, int Year) {
 	Position new_person = (Position)malloc(sizeof(Person));
 	if (new_person == NULL) {
@@ -182,9 +187,8 @@ int PrintInFile(Position p, const char* filename) {
 		printf("The list is empty. Nothing to print.\n");
 	}
 	else{
-		fprintf(fp, "NAME\tLAST NAME\tBIRTH YEAR\n");
 		while (p != NULL) {
-			fprintf(fp, "%s\t%s\t%d\n", p->name, p->last_name, p->year);
+			fprintf(fp, "%s\t%s\t\t%d\n", p->name, p->last_name, p->year);
 			p = p->next;
 		}
 	}
@@ -197,10 +201,9 @@ int PrintInFile(Position p, const char* filename) {
 int ScanFromFile(Position p, const char* filename) {
 
 	char buffer[MAX_BUFFER];
-	int count = 0;
-	char* Name;
-	char* LastName;
-	int Year;
+	char Name[MAX];
+	char LastName[MAX];
+	int Year = 0;
 
 	FILE* fp = fopen(filename, "r");
 	if (fp == NULL) {
@@ -210,7 +213,8 @@ int ScanFromFile(Position p, const char* filename) {
 
 	while(!feof(fp)){
 		fgets(buffer, 1024, fp);
-		if(sscanf(buffer, "%s %s %d", Name, LastName, Year) != 0){
+		buffer[strcspn(buffer, "\n")] = 0;
+		if(sscanf(buffer, "%s %s %d", Name, LastName, &Year) == 3){
 			InsertEnd(p, Name, LastName, Year);
 		}
 	}
@@ -229,20 +233,19 @@ void Sort(Position p) {
 		prev_j = p;
 		j = p->next;
 
-		//ostatak na prezi
+		while(j->next != end){
+			if(strcmp(j->last_name, j->next->last_name) > 0){
+				temp = j->next;
+				prev_j->next = temp;
+				j->next = temp->next;
+				temp->next = j;
+
+				j = temp;
+			}
+			prev_j = j;
+			j = j->next;
+		}
+		end = j;
 	}
 
 }
-
-/*
-checking for errors:
-
-fprintf(fp, "NAME\tLAST NAME\tBIRTH YEAR\n");
-while (p != NULL) {
-    if (fprintf(fp, "%s\t%s\t%d\n", p->name, p->last_name, p->year) < 0) {
-        printf("Error writing to file.\n");
-        break;
-    }
-    p = p->next;
-}
-*/
